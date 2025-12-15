@@ -96,7 +96,7 @@ INSERT INTO pricing_regions (zip_code, state, city, labor_multiplier, material_m
   ('83702', 'ID', 'Boise', 1.08, 1.04),
   ('83401', 'ID', 'Idaho Falls', 1.02, 1.02),
   ('83201', 'ID', 'Pocatello', 1.00, 1.01),
-  ('83814', 'ID', 'Coeur d''Alene', 1.10, 1.05);
+  ('83814', 'ID', 'Coeur d'Alene', 1.10, 1.05);
 
 -- Illinois
 INSERT INTO pricing_regions (zip_code, state, city, labor_multiplier, material_multiplier) VALUES
