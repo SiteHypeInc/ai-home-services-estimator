@@ -17,7 +17,7 @@ INSERT INTO pricing_regions (zip_code, state, city, labor_multiplier, material_m
 
 -- Arizona
 INSERT INTO pricing_regions (zip_code, state, city, labor_multiplier, material_multiplier) VALUES
-  ('85001', 'AZ', 'Phoenix', 1.08, 1.04),
+  ('85002', 'AZ', 'Phoenix', 1.08, 1.04),
   ('85701', 'AZ', 'Tucson', 1.05, 1.03),
   ('85201', 'AZ', 'Mesa', 1.07, 1.04),
   ('86001', 'AZ', 'Flagstaff', 1.12, 1.06),
