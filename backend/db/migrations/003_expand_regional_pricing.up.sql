@@ -1,6 +1,9 @@
 -- Expanded regional pricing for 800+ zip codes across all 50 states
 -- This includes major cities, suburbs, and representative rural areas
 
+-- Delete existing sample data from migration 001
+DELETE FROM pricing_regions;
+
 -- Alabama
 INSERT INTO pricing_regions (zip_code, state, city, labor_multiplier, material_multiplier) VALUES
   ('35201', 'AL', 'Birmingham', 0.95, 1.02),
@@ -519,7 +522,6 @@ INSERT INTO pricing_regions (zip_code, state, city, labor_multiplier, material_m
   ('50501', 'IA', 'Fort Dodge', 1.00, 1.01),
   ('56001', 'MN', 'Mankato', 1.08, 1.04),
   ('58701', 'ND', 'Minot', 1.09, 1.05),
-  ('59801', 'MT', 'Missoula', 1.11, 1.05),
   ('97520', 'OR', 'Ashland', 1.20, 1.08),
   ('83843', 'ID', 'Moscow', 1.05, 1.03),
   ('67501', 'KS', 'Hutchinson', 1.00, 1.01),

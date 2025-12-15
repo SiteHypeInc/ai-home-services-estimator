@@ -1,2 +1,2 @@
-ALTER TABLE estimates ADD COLUMN stripe_payment_link_id TEXT;
-ALTER TABLE estimates ADD COLUMN paid_at TIMESTAMP;
+ALTER TABLE estimates ADD COLUMN IF NOT EXISTS stripe_payment_link_id TEXT;
+ALTER TABLE estimates ADD COLUMN IF NOT EXISTS paid_at TIMESTAMP;
