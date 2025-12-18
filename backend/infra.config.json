@@ -1,0 +1,29 @@
+{
+  "$schema": "https://encore.dev/schemas/infra.schema.json",
+  "sql_servers": [
+    {
+      "host": "switchyard.proxy.rlwy.net:13691",
+      "tls_config": {
+        "disable_ca_validation": true
+      },
+      "databases": {
+        "db": {
+          "name": "railway",
+          "username": "postgres",
+          "password": "lqFtPKFovlmTgqoOKhBzwFEcSWyhHFMM"
+        }
+      }
+    }
+  ],
+  "secrets": {
+    "HubspotApiKey": "placeholder",
+    "PdfCoApiKey": "placeholder",
+    "ResendApiKey": "placeholder",
+    "StripeSecretKey": "placeholder",
+    "StripeWebhookSecret": "placeholder",
+    "VapiApiKey": "placeholder"
+  },
+  "gateway": {
+    "http_port": 80
+  }
+}

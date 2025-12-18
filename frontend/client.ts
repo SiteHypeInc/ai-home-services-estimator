@@ -11,7 +11,7 @@ import type { CookieWithOptions } from "encore.dev/api";
  */
 export type BaseURL = string
 
-export const Local: BaseURL = "http://localhost:4000"
+const baseURL = import.meta.env.VITE_API_BASE_URL;
 
 /**
  * Environment returns a BaseURL for calling the cloud environment with the given name.
