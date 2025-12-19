@@ -82,4 +82,4 @@ export const TRADE_FORM_SCHEMA = {
     { name: 'projectType', label: 'Project Type', type: 'select', options: ['Remodel', 'Addition', 'New Construction', 'Renovation'], required: true },
     { name: 'projectDetails', label: 'Project Details', type: 'textarea', required: true }
   ]
-};
+} as const;
