@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import backend from "~backend/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,93 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { ArrowLeft } from "lucide-react";
+
+// Hard-coded trade form schema (from your old working version)
+const TRADE_FORM_SCHEMA = {
+  roofing: [
+    { name: 'name', label: 'Full Name', type: 'text', required: true },
+    { name: 'email', label: 'Email', type: 'email', required: true },
+    { name: 'phone', label: 'Phone', type: 'tel', required: true },
+    { name: 'address', label: 'Property Address', type: 'text', required: true },
+    { name: 'city', label: 'City', type: 'text', required: true },
+    { name: 'state', label: 'State', type: 'select', options: ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'], required: true },
+    { name: 'zip', label: 'ZIP Code', type: 'text', required: true },
+    { name: 'squareFeet', label: 'Square Feet', type: 'number', required: true },
+    { name: 'roofType', label: 'Roof Type', type: 'select', options: ['Asphalt Shingle', 'Metal', 'Tile', 'Flat'], required: true },
+    { name: 'stories', label: 'Number of Stories', type: 'number', required: true }
+  ],
+  hvac: [
+    { name: 'name', label: 'Full Name', type: 'text', required: true },
+    { name: 'email', label: 'Email', type: 'email', required: true },
+    { name: 'phone', label: 'Phone', type: 'tel', required: true },
+    { name: 'address', label: 'Property Address', type: 'text', required: true },
+    { name: 'city', label: 'City', type: 'text', required: true },
+    { name: 'state', label: 'State', type: 'select', options: ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'], required: true },
+    { name: 'zip', label: 'ZIP Code', type: 'text', required: true },
+    { name: 'squareFeet', label: 'Square Feet', type: 'number', required: true },
+    { name: 'systemType', label: 'System Type', type: 'select', options: ['Central AC', 'Heat Pump', 'Furnace', 'Ductless Mini-Split'], required: true },
+    { name: 'units', label: 'Number of Units', type: 'number', required: true }
+  ],
+  electrical: [
+    { name: 'name', label: 'Full Name', type: 'text', required: true },
+    { name: 'email', label: 'Email', type: 'email', required: true },
+    { name: 'phone', label: 'Phone', type: 'tel', required: true },
+    { name: 'address', label: 'Property Address', type: 'text', required: true },
+    { name: 'city', label: 'City', type: 'text', required: true },
+    { name: 'state', label: 'State', type: 'select', options: ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'], required: true },
+    { name: 'zip', label: 'ZIP Code', type: 'text', required: true },
+    { name: 'squareFeet', label: 'Square Feet', type: 'number', required: true },
+    { name: 'serviceType', label: 'Service Type', type: 'select', options: ['Panel Upgrade', 'Rewiring', 'New Outlets', 'Lighting'], required: true }
+  ],
+  plumbing: [
+    { name: 'name', label: 'Full Name', type: 'text', required: true },
+    { name: 'email', label: 'Email', type: 'email', required: true },
+    { name: 'phone', label: 'Phone', type: 'tel', required: true },
+    { name: 'address', label: 'Property Address', type: 'text', required: true },
+    { name: 'city', label: 'City', type: 'text', required: true },
+    { name: 'state', label: 'State', type: 'select', options: ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'], required: true },
+    { name: 'zip', label: 'ZIP Code', type: 'text', required: true },
+    { name: 'squareFeet', label: 'Square Feet', type: 'number', required: true },
+    { name: 'serviceType', label: 'Service Type', type: 'select', options: ['Repiping', 'Drain Cleaning', 'Water Heater', 'Fixture Installation'], required: true },
+    { name: 'bathrooms', label: 'Number of Bathrooms', type: 'number', required: true }
+  ],
+  flooring: [
+    { name: 'name', label: 'Full Name', type: 'text', required: true },
+    { name: 'email', label: 'Email', type: 'email', required: true },
+    { name: 'phone', label: 'Phone', type: 'tel', required: true },
+    { name: 'address', label: 'Property Address', type: 'text', required: true },
+    { name: 'city', label: 'City', type: 'text', required: true },
+    { name: 'state', label: 'State', type: 'select', options: ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'], required: true },
+    { name: 'zip', label: 'ZIP Code', type: 'text', required: true },
+    { name: 'squareFeet', label: 'Square Feet', type: 'number', required: true },
+    { name: 'floorType', label: 'Floor Type', type: 'select', options: ['Hardwood', 'Laminate', 'Tile', 'Carpet', 'Vinyl'], required: true },
+    { name: 'rooms', label: 'Number of Rooms', type: 'number', required: true }
+  ],
+  painting: [
+    { name: 'name', label: 'Full Name', type: 'text', required: true },
+    { name: 'email', label: 'Email', type: 'email', required: true },
+    { name: 'phone', label: 'Phone', type: 'tel', required: true },
+    { name: 'address', label: 'Property Address', type: 'text', required: true },
+    { name: 'city', label: 'City', type: 'text', required: true },
+    { name: 'state', label: 'State', type: 'select', options: ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'], required: true },
+    { name: 'zip', label: 'ZIP Code', type: 'text', required: true },
+    { name: 'squareFeet', label: 'Square Feet', type: 'number', required: true },
+    { name: 'paintType', label: 'Paint Type', type: 'select', options: ['Interior', 'Exterior', 'Both'], required: true },
+    { name: 'rooms', label: 'Number of Rooms', type: 'number', required: true }
+  ],
+  general_contracting: [
+    { name: 'name', label: 'Full Name', type: 'text', required: true },
+    { name: 'email', label: 'Email', type: 'email', required: true },
+    { name: 'phone', label: 'Phone', type: 'tel', required: true },
+    { name: 'address', label: 'Property Address', type: 'text', required: true },
+    { name: 'city', label: 'City', type: 'text', required: true },
+    { name: 'state', label: 'State', type: 'select', options: ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY'], required: true },
+    { name: 'zip', label: 'ZIP Code', type: 'text', required: true },
+    { name: 'squareFeet', label: 'Square Feet', type: 'number', required: true },
+    { name: 'projectType', label: 'Project Type', type: 'select', options: ['Remodel', 'Addition', 'New Construction', 'Renovation'], required: true },
+    { name: 'projectDetails', label: 'Project Details', type: 'textarea', required: true }
+  ]
+};
 
 export default function EstimateFormPage() {
   const { tradeId } = useParams<{ tradeId: string }>();
@@ -25,17 +112,23 @@ export default function EstimateFormPage() {
     projectDetails: {} as Record<string, any>,
   });
 
-  const { data: trade, isLoading } = useQuery({
-    queryKey: ["trade", tradeId],
-    queryFn: async () => backend.trade.get({ id: parseInt(tradeId!) }),
-    enabled: !!tradeId,
-  });
+  // Hard-coded trades list (no backend fetch needed)
+  const trades = [
+    { id: 1, name: "Roofing", key: "roofing" },
+    { id: 2, name: "HVAC", key: "hvac" },
+    { id: 3, name: "Electrical", key: "electrical" },
+    { id: 4, name: "Plumbing", key: "plumbing" },
+    { id: 5, name: "Flooring", key: "flooring" },
+    { id: 6, name: "Painting", key: "painting" },
+    { id: 7, name: "General Contracting", key: "general_contracting" },
+    // Add the rest of your trades here with their keys matching TRADE_FORM_SCHEMA
+  ];
+
+  const trade = trades.find(t => t.id === parseInt(tradeId || "1")) || trades[0]; // fallback to first trade
 
   const createEstimate = useMutation({
     mutationFn: async () => {
-      // Using contractor ID 1 for demo purposes
-      const contractorId = 1;
-      
+      const contractorId = 1; // demo
       return backend.estimate.create({
         contractorId,
         tradeId: parseInt(tradeId!),
@@ -79,21 +172,7 @@ export default function EstimateFormPage() {
     createEstimate.mutate();
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-muted-foreground">Loading form...</div>
-      </div>
-    );
-  }
-
-  if (!trade) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-muted-foreground">Trade not found</div>
-      </div>
-    );
-  }
+  const fields = TRADE_FORM_SCHEMA[trade.key] || [];
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -177,47 +256,77 @@ export default function EstimateFormPage() {
             <div className="border-t border-border pt-6">
               <h3 className="font-semibold mb-4 text-foreground">Project Details</h3>
               <div className="space-y-4">
-                {trade.fields.map((field) => (
-                  <div key={field.id} className="space-y-2">
-                    <Label htmlFor={field.fieldName} className="text-foreground">
-                      {field.fieldLabel} {field.required && "*"}
+                {fields.map((field) => (
+                  <div key={field.name} className="space-y-2">
+                    <Label htmlFor={field.name} className="text-foreground">
+                      {field.label} {field.required && "*"}
                     </Label>
                     
-                    {field.fieldType === "number" && (
+                    {field.type === "number" && (
                       <Input
-                        id={field.fieldName}
+                        id={field.name}
                         type="number"
                         required={field.required}
-                        onChange={(e) => handleFieldChange(field.fieldName, parseFloat(e.target.value) || 0)}
+                        onChange={(e) => handleFieldChange(field.name, parseFloat(e.target.value) || 0)}
                         className="bg-background border-input"
                       />
                     )}
                     
-                    {field.fieldType === "text" && (
-                      <Textarea
-                        id={field.fieldName}
+                    {field.type === "text" && (
+                      <Input
+                        id={field.name}
+                        type="text"
                         required={field.required}
-                        onChange={(e) => handleFieldChange(field.fieldName, e.target.value)}
+                        onChange={(e) => handleFieldChange(field.name, e.target.value)}
                         className="bg-background border-input"
                       />
                     )}
                     
-                    {field.fieldType === "select" && field.fieldOptions && (
+                    {field.type === "email" && (
+                      <Input
+                        id={field.name}
+                        type="email"
+                        required={field.required}
+                        onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                        className="bg-background border-input"
+                      />
+                    )}
+                    
+                    {field.type === "tel" && (
+                      <Input
+                        id={field.name}
+                        type="tel"
+                        required={field.required}
+                        onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                        className="bg-background border-input"
+                      />
+                    )}
+                    
+                    {field.type === "select" && field.options && (
                       <Select
                         required={field.required}
-                        onValueChange={(value) => handleFieldChange(field.fieldName, value)}
+                        onValueChange={(value) => handleFieldChange(field.name, value)}
                       >
                         <SelectTrigger className="bg-background border-input">
                           <SelectValue placeholder="Select an option" />
                         </SelectTrigger>
                         <SelectContent>
-                          {field.fieldOptions.map((option) => (
+                          {field.options.map((option) => (
                             <SelectItem key={option} value={option}>
-                              {option.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
+                              {option}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
+                    )}
+                    
+                    {field.type === "textarea" && (
+                      <Textarea
+                        id={field.name}
+                        required={field.required}
+                        onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                        className="bg-background border-input"
+                      />
                     )}
                   </div>
                 ))}
