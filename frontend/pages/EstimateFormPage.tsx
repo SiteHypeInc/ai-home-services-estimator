@@ -13,7 +13,7 @@ import { ArrowLeft } from "lucide-react";
 import { TRADE_FORM_SCHEMA } from "../data/tradeFormSchema";
 
 
-function EstimateFormPage() {
+export default function EstimateFormPage() {
   const { tradeId } = useParams<{ tradeId: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -261,4 +261,3 @@ function EstimateFormPage() {
     </div>
   );
 }
-export default EstimateFormPage;
