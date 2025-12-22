@@ -1,6 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import backend from "~backend/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Wrench, Zap, Wind, Home, Paintbrush, TreePine, Hammer } from "lucide-react";
@@ -17,38 +15,24 @@ const tradeIcons: Record<string, any> = {
 
 export default function HomePage() {
   const navigate = useNavigate();
-  
- /* const { data, isLoading } = useQuery({
-    queryKey: ["trades"],
-    queryFn: async () => backend.trade.list(),
-  });*/
 
   const trades = [
-  { id: 1, name: "Roofing", description: "Roof replacement and repair" },
-  { id: 2, name: "HVAC", description: "Heating and cooling systems" },
-  { id: 3, name: "Electrical", description: "Wiring and panel upgrades" },
-  { id: 4, name: "Plumbing", description: "Pipe and fixture work" },
-  { id: 5, name: "Flooring", description: "Floor installation and refinishing" },
-  { id: 6, name: "Painting", description: "Interior and exterior painting" },
-  { id: 7, name: "General Contracting", description: "Remodels, additions, renovations" },
-  { id: 8, name: "Carpentry", description: "Custom carpentry, framing, finish work" },
-  { id: 9, name: "Concrete", description: "Concrete pouring, stamping, finishing" },
-  { id: 10, name: "Drywall", description: "Drywall installation, taping, finishing" },
-  { id: 11, name: "Fencing", description: "Fence installation and repair" },
-  { id: 12, name: "Gutters", description: "Gutter installation and cleaning" },
-  { id: 13, name: "Landscaping", description: "Lawn care and hardscaping" },
-  { id: 14, name: "Siding", description: "Vinyl, fiber cement siding" },
-  { id: 15, name: "Windows & Doors", description: "Replacement and installation" },
-  // add any others from your old version
-];
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-muted-foreground">Loading trades...</div>
-      </div>
-    );
-  }
+    { id: 1, name: "Roofing", description: "Roof replacement and repair" },
+    { id: 2, name: "HVAC", description: "Heating and cooling systems" },
+    { id: 3, name: "Electrical", description: "Wiring and panel upgrades" },
+    { id: 4, name: "Plumbing", description: "Pipe and fixture work" },
+    { id: 5, name: "Flooring", description: "Floor installation and refinishing" },
+    { id: 6, name: "Painting", description: "Interior and exterior painting" },
+    { id: 7, name: "General Contracting", description: "Remodels, additions, renovations" },
+    { id: 8, name: "Carpentry", description: "Custom carpentry, framing, finish work" },
+    { id: 9, name: "Concrete", description: "Concrete pouring, stamping, finishing" },
+    { id: 10, name: "Drywall", description: "Drywall installation, taping, finishing" },
+    { id: 11, name: "Fencing", description: "Fence installation and repair" },
+    { id: 12, name: "Gutters", description: "Gutter installation and cleaning" },
+    { id: 13, name: "Landscaping", description: "Lawn care and hardscaping" },
+    { id: 14, name: "Siding", description: "Vinyl, fiber cement siding" },
+    { id: 15, name: "Windows & Doors", description: "Replacement and installation" },
+  ];
 
   return (
     <div className="max-w-6xl mx-auto">
@@ -61,13 +45,12 @@ export default function HomePage() {
           No waiting, no hassle – just professional pricing tailored to your project.
         </p>
       </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {data?.trades.map((trade) => {
-          const Icon = tradeIcons[trade.name] || Wrench;
-          
+        {trades.map((trade) => {
+          const Icon = tradeIcons[trade.name.toLowerCase()] || Wrench;
+         
           return (
-            <Card 
+            <Card
               key={trade.id}
               className="cursor-pointer hover:shadow-lg transition-shadow border-border bg-card"
               onClick={() => navigate(`/estimate/${trade.id}`)}
@@ -90,7 +73,6 @@ export default function HomePage() {
           );
         })}
       </div>
-
       <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="text-center">
           <div className="text-3xl font-bold text-primary mb-2">800+</div>
