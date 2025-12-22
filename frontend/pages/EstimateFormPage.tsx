@@ -305,11 +305,17 @@ export default function EstimateFormPage() {
     </div>
   </div>
 
-  <Button 
-    type="submit" 
-    className="w-full"
-    disabled={createEstimate.isPending}
-  >
-    {createEstimate.isPending ? "Creating Estimate..." : "Get Instant Estimate"}
-  </Button>
-</form>
+             <Button 
+              type="submit" 
+              className="w-full"
+              disabled={createEstimate.isPending}
+            >
+              {createEstimate.isPending ? "Creating Estimate..." : "Get Instant Estimate"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+export default EstimateFormPage;
