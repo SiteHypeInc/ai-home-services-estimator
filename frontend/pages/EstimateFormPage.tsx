@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/components/ui/use-toast";
 import { ArrowLeft } from "lucide-react";
 
-// Hard-coded trade form schema (cleaned — only project-specific fields)
+// Hard-coded trade form schema — only project-specific fields (no duplicates)
 const TRADE_FORM_SCHEMA = {
   roofing: [
     { name: 'squareFeet', label: 'Square Feet', type: 'number', required: true },
@@ -237,4 +237,41 @@ export default function EstimateFormPage() {
                         onValueChange={(value) => handleFieldChange(field.name, value)}
                       >
                         <SelectTrigger className="bg-background border-input">
-                          <SelectValue placeholder="
+                          <SelectValue placeholder="Select an option" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {field.options.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+
+                    {field.type === "textarea" && (
+                      <Textarea
+                        id={field.name}
+                        required={field.required}
+                        onChange={(e) => handleFieldChange(field.name, e.target.value)}
+                        className="bg-background border-input"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={createEstimate.isPending}
+            >
+              {createEstimate.isPending ? "Creating Estimate..." : "Get Instant Estimate"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
