@@ -18,10 +18,29 @@ const tradeIcons: Record<string, any> = {
 export default function HomePage() {
   const navigate = useNavigate();
   
-  const { data, isLoading } = useQuery({
+ /* const { data, isLoading } = useQuery({
     queryKey: ["trades"],
     queryFn: async () => backend.trade.list(),
-  });
+  });*/
+
+  const trades = [
+  { id: 1, name: "Roofing", description: "Roof replacement and repair" },
+  { id: 2, name: "HVAC", description: "Heating and cooling systems" },
+  { id: 3, name: "Electrical", description: "Wiring and panel upgrades" },
+  { id: 4, name: "Plumbing", description: "Pipe and fixture work" },
+  { id: 5, name: "Flooring", description: "Floor installation and refinishing" },
+  { id: 6, name: "Painting", description: "Interior and exterior painting" },
+  { id: 7, name: "General Contracting", description: "Remodels, additions, renovations" },
+  { id: 8, name: "Carpentry", description: "Custom carpentry, framing, finish work" },
+  { id: 9, name: "Concrete", description: "Concrete pouring, stamping, finishing" },
+  { id: 10, name: "Drywall", description: "Drywall installation, taping, finishing" },
+  { id: 11, name: "Fencing", description: "Fence installation and repair" },
+  { id: 12, name: "Gutters", description: "Gutter installation and cleaning" },
+  { id: 13, name: "Landscaping", description: "Lawn care and hardscaping" },
+  { id: 14, name: "Siding", description: "Vinyl, fiber cement siding" },
+  { id: 15, name: "Windows & Doors", description: "Replacement and installation" },
+  // add any others from your old version
+];
 
   if (isLoading) {
     return (
