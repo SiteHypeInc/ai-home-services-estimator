@@ -20,6 +20,24 @@
 
   "baseUrl": ".",
   "paths": {
-    "@/*": ["src/*"]
-  }
-}
+    "@/*": ["src/*"],
+  "~backend/*": [
+        "../backend/*"
+      ],
+      "~backend/client": [
+        "./client.ts"
+      ],
+      "~encore/*": [
+        "../backend/encore.gen/*"
+      ]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}  
+
